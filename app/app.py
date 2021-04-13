@@ -1,6 +1,17 @@
-from test.test_forecast_controller import TestForecastController
+from controller.forecast_controller import ForecastController
+from controller.forecast import Forecast
 
 
-test_forecast_controller = TestForecastController()
+fc = ForecastController()
+token_file = 'token.txt'
 
-test_forecast_controller.execute_tests()
+if fc.token_as_file(token_file):
+    token = fc.token
+
+city = fc.city_forecast('London')
+
+forecast = Forecast(token, city)
+print(forecast.day_forecast())
+print('\n==== Week Forecast ====')
+for forecast in forecast.week_forecast():
+    print(forecast)
