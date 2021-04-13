@@ -19,7 +19,7 @@ class ForecastController:
                 self.token_as_string(token)
                 return True
         except Exception as e:
-            print(str(e))
+            raise Exception(str(e))
             return False
 
     def city_forecast(self, city_name):

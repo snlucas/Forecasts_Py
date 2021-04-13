@@ -6,27 +6,22 @@ import requests
 
 @final
 class Forecast:
-    _request_city = ''
-    _lon = ''
-    _lat = ''
-    _token = ''
-    _city = ''
-    _units = ''
-
     def __init__(self, token, city, units='metric'):
         self._token = token
         self._city = city
         self._units = units
-        self._day_forecast = ''
-        self._week_forecast = []
+        self._lat = ''
+        self._lon = ''
+        self.get_coordinates(self._city, self._token)
 
+    def get_coordinates(self, city, token):
         # Needed to get longitude and latitude
-        _url_city = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={token}'
+        url_city = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={token}'
 
-        _request_city = requests.get(_url_city).json()  # Get data from the API as JSON
-
-        self._lat = _request_city["coord"]["lat"]
-        self._lon = _request_city["coord"]["lon"]
+        request_city = requests.get(url_city).json()  # Get data from the API as JSON
+        
+        self._lat = request_city["coord"]["lat"]
+        self._lon = request_city["coord"]["lon"]
 
     def forecasts(self):
         '''
@@ -57,7 +52,7 @@ class Forecast:
         day = next(iter(self.forecasts()))
         forecast = list(self.forecasts().values())[0]
 
-        self._day_forecast = f'{day} - {forecast}'
+        return f'{day} - {forecast}'
 
     def week_forecast(self):
         week_forecast = []
@@ -65,7 +60,7 @@ class Forecast:
         for day in self.forecasts():
             week_forecast.append(f'{day} - {self.forecasts()[day]}')
 
-        self._week_forecast = week_forecast
+        return week_forecast
 
     def __str__(self):
         return self.day_forecast
